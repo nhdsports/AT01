@@ -3,43 +3,41 @@ package test;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 import page.CompareProduct;
 
+import java.util.concurrent.TimeUnit;
+
 public class TestCompareProduct {
-    public static void main(String[] args) throws InterruptedException {
 
-        WebDriver driver;
+    private WebDriver driver;
+    private String baseUrl;
 
+    @BeforeMethod
+    public void setUp() {
         WebDriverManager.chromedriver().setup();
-
         driver = new ChromeDriver();
-
         driver.manage().window().maximize();
-
-        driver.get("https://www.thegioididong.com/");
-
-        // Compare
-        CompareProduct compare = new CompareProduct(driver);
-        compare.setInputSearch("laptop");
-        compare.clickBtnSearch();
-        Thread.sleep(2000);
-        compare.clickBtnPrice();
-        Thread.sleep(2000);
-        compare.clickBtnUnder15M();
-        Thread.sleep(2000);
-        compare.clickBtnResult();
-        Thread.sleep(2000);
-        compare.clickBtnSort();
-        Thread.sleep(2000);
-        compare.clickBtnAtoZprice();
-        Thread.sleep(2000);
-        compare.clickBtnCompare(1);
-        Thread.sleep(1000);
-        compare.clickBtnCompare(2);
-        Thread.sleep(1000);
-        compare.clickBtnCompare(3);
-        Thread.sleep(1000);
-        compare.clickBtnCompareNow();
-
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        baseUrl = "https://www.thegioididong.com/";
+        System.out.println("-- Done setup");
     }
+
+    @Test
+    public void test() {
+        driver.get(baseUrl);
+        // Compare Product
+        CompareProduct compare = new CompareProduct(driver);
+        compare.runCompareProduct("laptop");
+        System.out.println("-- Done test");
+    }
+
+    @AfterMethod
+    public void testDown() {
+        driver.quit();
+        System.out.println("-- Done all");
+    }
+
 }

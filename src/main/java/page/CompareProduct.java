@@ -2,8 +2,14 @@ package page;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class CompareProduct {
+
+    final private int TIME_WAIT = 10;   // s
+    final private int TIME_SLEEP = 3000;    //ms
 
     WebDriver driver;
 
@@ -13,56 +19,69 @@ public class CompareProduct {
     By btnUnder15M = By.cssSelector(".filter-show > .filter-list.price > a[data-id='768']");
     By btnResult = By.cssSelector(".filter-item.warpper-price-outside > .filter-show > .filter-button > a.btn-filter-readmore");
     By btnSort = By.cssSelector("p.click-sort");
-    By btnAtoZprice = By.cssSelector(".sort-select-main a[data-id='2']");
+    By btnPriceAtoZ = By.cssSelector(".sort-select-main a[data-id='2']");
+    By btnAddCompare;
     By btnCompareNow = By.cssSelector(".closecompare > a.doss");
 
     public CompareProduct(WebDriver driver) {
         this.driver = driver;
     }
 
-    // Input search keyword
-    public void setInputSearch(String keyword) {
+    // Set btnAddCompare with id product
+    private void setBtnAddCompare(int idProduct) {
+        btnAddCompare = By.cssSelector(".listproduct > li[data-index='" + idProduct + "'] > .item-ss");
+    }
+
+    // Run Compare Product
+    public void runCompareProduct(String keyword) {
+
+        waitForElement(inputSearch);
         driver.findElement(inputSearch).sendKeys(keyword);
-    }
 
-    // Click search button
-    public void clickBtnSearch() {
+        waitForElement(btnSearch);
         driver.findElement(btnSearch).click();
-    }
 
-    // Click price button
-    public void clickBtnPrice() {
+        waitForElement(btnPrice);
         driver.findElement(btnPrice).click();
-    }
 
-    // Click under 15M price button
-    public void clickBtnUnder15M() {
+        waitForElement(btnUnder15M);
         driver.findElement(btnUnder15M).click();
-    }
 
-    // Click result button
-    public void clickBtnResult() {
+        waitForElement(btnResult);
         driver.findElement(btnResult).click();
-    }
 
-    // Click sort button
-    public void clickBtnSort() {
+        waitForElement(btnSort);
         driver.findElement(btnSort).click();
-    }
 
-    // Click A-Z price button
-    public void clickBtnAtoZprice() {
-        driver.findElement(btnAtoZprice).click();
-    }
+        waitForElement(btnPriceAtoZ);
+        driver.findElement(btnPriceAtoZ).click();
 
-    // Click compare button of product
-    public void clickBtnCompare(int id) {
-        driver.findElement(By.cssSelector(".listproduct > li[data-index='" + id + "'] > .item-ss")).click();
-    }
+        sleepPage();
+        for (int i = 1; i <= 3; i++) {
+            setBtnAddCompare(i);
+            waitForElement(btnAddCompare);
+            driver.findElement(btnAddCompare).click();
+        }
 
-    // Click compare now button
-    public void clickBtnCompareNow() {
+        waitForElement(btnCompareNow);
         driver.findElement(btnCompareNow).click();
+
+        sleepPage();
+    }
+
+    // Wait
+    public void waitForElement(By elm) {
+        WebDriverWait wait = new WebDriverWait(driver, TIME_WAIT);
+        wait.until(ExpectedConditions.elementToBeClickable(elm));
+    }
+
+    // Sleep
+    public void sleepPage() {
+        try {
+            Thread.sleep(TIME_SLEEP);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
 }
