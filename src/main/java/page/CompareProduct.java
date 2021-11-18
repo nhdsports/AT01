@@ -2,16 +2,12 @@ package page;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import other.WaitAndSleep;
 
 public class CompareProduct {
 
-    final private int TIME_WAIT = 10;   // s
-    final private int TIME_SLEEP = 3000;    //ms
-
     WebDriver driver;
+    WaitAndSleep ws = new WaitAndSleep();
 
     By inputSearch = By.id("skw");
     By btnSearch = By.cssSelector("form > button[type='submit']");
@@ -34,54 +30,48 @@ public class CompareProduct {
 
     // Run Compare Product
     public void runCompareProduct(String keyword) {
+        search(keyword);
+        filter();
+        sort();
+        compare();
+    }
 
-        waitForElement(inputSearch);
+    // Search
+    public void search(String keyword) {
+        ws.waitForElement(driver, inputSearch);
         driver.findElement(inputSearch).sendKeys(keyword);
-
-        waitForElement(btnSearch);
         driver.findElement(btnSearch).click();
+    }
 
-        waitForElement(btnPrice);
+    // Filter
+    public void filter() {
+        ws.waitForElement(driver, btnPrice);
+        ws.waitForElement(driver, btnUnder15M);
+        ws.waitForElement(driver, btnResult);
         driver.findElement(btnPrice).click();
-
-        waitForElement(btnUnder15M);
         driver.findElement(btnUnder15M).click();
-
-        waitForElement(btnResult);
         driver.findElement(btnResult).click();
+    }
 
-        waitForElement(btnSort);
+    // Sort
+    public void sort() {
+        ws.waitForElement(driver, btnSort);
+        ws.waitForElement(driver, btnPriceAtoZ);
         driver.findElement(btnSort).click();
-
-        waitForElement(btnPriceAtoZ);
         driver.findElement(btnPriceAtoZ).click();
+        ws.sleepPage(1000);
+    }
 
-        sleepPage();
+    // Click add compare on product
+    public void compare() {
         for (int i = 1; i <= 3; i++) {
             setBtnAddCompare(i);
-            waitForElement(btnAddCompare);
+            ws.waitForElement(driver, btnAddCompare);
             driver.findElement(btnAddCompare).click();
         }
-
-        waitForElement(btnCompareNow);
+        ws.waitForElement(driver, btnCompareNow);
         driver.findElement(btnCompareNow).click();
-
-        sleepPage();
-    }
-
-    // Wait
-    public void waitForElement(By elm) {
-        WebDriverWait wait = new WebDriverWait(driver, TIME_WAIT);
-        wait.until(ExpectedConditions.elementToBeClickable(elm));
-    }
-
-    // Sleep
-    public void sleepPage() {
-        try {
-            Thread.sleep(TIME_SLEEP);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        ws.sleepPage(3000);
     }
 
 }
