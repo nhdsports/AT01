@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<!--<suite name="w3s Test" thread-count="2" parallel="tests">-->
+<suite name="w3s Test" thread-count="2" parallel="classes">
+    <listeners></listeners>
+    <test name="W3S Register Test 1">
+        <parameter name="environment" value="gra"/>
+        <classes>
+            <class name="test.RegisterTest"/>
+        </classes>
+    </test>
+    <test name="W3S Register Test 2">
+        <parameter name="environment" value="staging"/>
+        <classes>
+            <class name="test.RegisterTest"/>
+        </classes>
+    </test>
+</suite>
